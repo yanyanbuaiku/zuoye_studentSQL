@@ -20,5 +20,9 @@ public class Student implements Serializable {
     private String StudentRoom = null; //宿舍
     //char 20位
 
+    public Student(String student_ID, String userName, String userPassword,
+                   String name, Boolean sex, int age, String phone_1,
+                   String phone_2, String studentRoom) {
 
+    }
 }
