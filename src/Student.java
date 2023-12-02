@@ -1,11 +1,13 @@
-import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
+
 
 /**
- * 支持序列化<p>
- * 提供get和set方法
- *
+ * 实现StudentList接口
+ * 提供基础Student的方法支持
+ * 重写Object.toString方法
  */
-public class Student implements Serializable {
+public class Student implements StudentList {
     private String Student_ID; //学号
     //bigint
     private String Name = null; //姓名
@@ -21,7 +23,9 @@ public class Student implements Serializable {
     private String StudentRoom = null; //宿舍
     //char 20位
 
-    public Student(){}
+    public Student() {
+    }
+
     public Student(String student_ID, String name, Boolean sex, int age,
                    String phone_1, String phone_2, String studentRoom) {
         this.Student_ID = student_ID;
@@ -33,10 +37,44 @@ public class Student implements Serializable {
         this.StudentRoom = studentRoom;
     }
 
+    @Override
+    public String toString(List<Student> students) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("学号                姓名           性别   年龄    手机号1           手机号2           宿舍号    \n");
+        for (Student student : students) {
+            //TODO
+            sb.append(stringOfLength(student.getStudent_ID(), 18))
+                    .append(stringOfLength(student.getName(), 12))
+                    .append(stringOfLength(student.getSex() ? "男" : "女", 4))
+                    .append(stringOfLength(Objects.toString(student.getAge()), 6))
+                    .append(stringOfLength(student.getPhone_1(), 16))
+                    .append(stringOfLength(student.getPhone_2(), 16))
+                    .append(stringOfLength(student.getStudentRoom(), 7)).append("\n");
+        }
+        return sb.toString();
+    }
 
-    public String getStuAll() {
+
+    @Override
+    public String Qsort(List<Student> students) {
+        //TODO
+
+        return null;
+    }
+
+    public String toString() {
         return Student_ID + Name + Sex + Age
                 + Phone_1 + Phone_2 + StudentRoom;
+    }
+
+
+    public String stringOfLength(String str, int newlen) {
+        StringBuilder strBuilder = new StringBuilder(str);
+        while (strBuilder.length() <= newlen) {
+            strBuilder.append(" ");
+        }
+        str = strBuilder.toString();
+        return str;
     }
 
     public String getStudent_ID() {
@@ -94,4 +132,6 @@ public class Student implements Serializable {
     public void setStudentRoom(String studentRoom) {
         StudentRoom = studentRoom;
     }
+
+
 }
