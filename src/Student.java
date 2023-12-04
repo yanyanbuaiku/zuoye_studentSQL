@@ -1,5 +1,8 @@
+import com.sun.istack.internal.NotNull;
+
 import java.util.List;
 import java.util.Objects;
+import java.util.Scanner;
 
 
 /**
@@ -12,7 +15,7 @@ public class Student implements StudentList {
     //bigint
     private String Name = null; //姓名
     //varchar 50位
-    private Boolean Sex = true; //性别
+    private boolean Sex = true; //性别
     //tinyint 1位(布尔类型) 1 true 男    0 false 女
     private int Age = 0; //年龄
     //int
@@ -20,6 +23,8 @@ public class Student implements StudentList {
     //bigint
     private String Phone_2; //手机号
     //bigint
+    private String Studentbuilding = null;
+    //char(20)
     private String StudentRoom = null; //宿舍
     //char 20位
 
@@ -27,20 +32,21 @@ public class Student implements StudentList {
     }
 
     public Student(String student_ID, String name, Boolean sex, int age,
-                   String phone_1, String phone_2, String studentRoom) {
+                   String phone_1, String phone_2, String studentbuilding, String studentRoom) {
         this.Student_ID = student_ID;
         this.Name = name;
         this.Sex = sex;
         this.Age = age;
         this.Phone_1 = phone_1;
         this.Phone_2 = phone_2;
+        this.Studentbuilding = studentbuilding;
         this.StudentRoom = studentRoom;
     }
 
     @Override
     public String toString(List<Student> students) {
         StringBuilder sb = new StringBuilder();
-        sb.append("学号                姓名           性别   年龄    手机号1           手机号2           宿舍号    \n");
+        sb.append("学号                姓名           性别   年龄    手机号1           手机号2           宿舍楼   宿舍号    \n");
         for (Student student : students) {
             //TODO
             sb.append(stringOfLength(student.getStudent_ID(), 18))
@@ -49,7 +55,8 @@ public class Student implements StudentList {
                     .append(stringOfLength(Objects.toString(student.getAge()), 6))
                     .append(stringOfLength(student.getPhone_1(), 16))
                     .append(stringOfLength(student.getPhone_2(), 16))
-                    .append(stringOfLength(student.getStudentRoom(), 7)).append("\n");
+                    .append(stringOfLength(student.getStudentbuilding(), 6))
+                    .append(stringOfLength(student.getStudentRoom(), 4)).append("\n");
         }
         return sb.toString();
     }
@@ -64,11 +71,17 @@ public class Student implements StudentList {
 
     public String toString() {
         return Student_ID + Name + Sex + Age
-                + Phone_1 + Phone_2 + StudentRoom;
+                + Phone_1 + Phone_2 + Studentbuilding + StudentRoom;
     }
 
-
-    public String stringOfLength(String str, int newlen) {
+    /**
+     * 用空格增加字符串长度
+     *
+     * @param str    传入一个非空的字符串
+     * @param newlen 新长度应大于str.length()，否则对函数无影响
+     * @return 返回结尾被空格符填充的字符串
+     */
+    public String stringOfLength(@NotNull String str, int newlen) {
         StringBuilder strBuilder = new StringBuilder(str);
         while (strBuilder.length() <= newlen) {
             strBuilder.append(" ");
@@ -133,5 +146,60 @@ public class Student implements StudentList {
         StudentRoom = studentRoom;
     }
 
+    public String getStudentbuilding() {
+        return Studentbuilding;
+    }
 
+    public void setStudentbuilding(String studentbuilding) {
+        Studentbuilding = studentbuilding;
+    }
+
+    public static Student newStudent(Scanner sc) {
+        System.out.println("请依次输入  1.学号   2.姓名  3.性别(中文)  4.年龄   5.手机号1   6.手机号2   7.宿舍楼    8.宿舍号  \n");
+        String Student_ID = sc.next(); //学号
+        String Name = sc.next(); //姓名
+        String Sex = sc.next(); //性别
+        String Age = sc.next(); //年龄
+        String Phone_1 = sc.next(); //手机号
+        String Phone_2 = sc.next(); //手机号
+        String Studentbuilding = sc.next();//宿舍楼
+        String StudentRoom = sc.next(); //宿舍
+
+        if (sc.hasNext())//读取额外字符避免后续错误
+            sc.nextLine();
+
+        while (SQLDriver.isNotNum(Student_ID)) {
+            System.out.println("学号输入有误请重新输入(数字)");
+            Student_ID = sc.next();
+        }
+        while (!Sex.equals("男") && !Sex.equals("女")) {
+            System.out.println("性别输入有误请重新输入(中文)");
+            Sex = sc.next();
+        }
+        while (SQLDriver.isNotNum(Age)) {
+            System.out.println("年龄输入有误请重新输入(数字)");
+            Age = sc.next();
+        }
+        while (SQLDriver.isNotNum(Phone_1)) {
+            System.out.println("手机号1输入有误请重新输入(数字)");
+            Phone_1 = sc.next();
+        }
+        while (SQLDriver.isNotNum(Phone_2)) {
+            System.out.println("手机号2输入有误请重新输入(数字)");
+            Phone_2 = sc.next();
+        }
+        while (SQLDriver.isNotNum(Studentbuilding)) {
+            System.out.println("宿舍楼输入有误请重新输入(数字)");
+            Studentbuilding = sc.next();
+        }
+        while (SQLDriver.isNotNum(StudentRoom)) {
+            System.out.println("宿舍号输入有误请重新输入(数字)");
+            StudentRoom = sc.next();
+        }
+
+        if (sc.hasNext())//读取额外字符避免后续错误
+            sc.nextLine();
+
+        return new Student(Student_ID, Name, Sex.equals("男"), Integer.parseInt(Age), Phone_1, Phone_2, Studentbuilding, StudentRoom);
+    }
 }
