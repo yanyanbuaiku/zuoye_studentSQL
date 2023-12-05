@@ -10,7 +10,7 @@ import java.util.Scanner;
  * 提供基础Student的方法支持
  * 重写Object.toString方法
  */
-public class Student implements StudentList {
+public class Student {
     private String Student_ID; //学号
     //bigint
     private String Name = null; //姓名
@@ -43,8 +43,53 @@ public class Student implements StudentList {
         this.StudentRoom = studentRoom;
     }
 
-    @Override
-    public String toString(List<Student> students) {
+    public static String getIndex(int x) {
+        switch (x) {
+            case 1:
+                return "Student_ID";
+            case 2:
+                return "Name";
+            case 3:
+                return "Sex";
+            case 4:
+                return "Age";
+            case 5:
+                return "Phone_1";
+            case 6:
+                return "Phone_2";
+            case 7:
+                return "Studentbuilding";
+            case 8:
+                return "StudentRoom";
+            default:
+                return null;
+        }
+    }
+
+    public static String getIndexChinese(int x) {
+        switch (x) {
+            case 1:
+                return "学号";
+            case 2:
+                return "姓名";
+            case 3:
+                return "性别";
+            case 4:
+                return "年龄";
+            case 5:
+                return "手机号1";
+            case 6:
+                return "手机号2";
+            case 7:
+                return "宿舍楼";
+            case 8:
+                return "宿舍号";
+            default:
+                return null;
+        }
+    }
+
+    public static String toString(List<Student> students) {
         StringBuilder sb = new StringBuilder();
         sb.append("学号                姓名           性别   年龄    手机号1           手机号2           宿舍楼   宿舍号    \n");
         for (Student student : students) {
@@ -62,7 +107,6 @@ public class Student implements StudentList {
     }
 
 
-    @Override
     public String Qsort(List<Student> students) {
         //TODO
 
@@ -78,16 +122,64 @@ public class Student implements StudentList {
      * 用空格增加字符串长度
      *
      * @param str    传入一个非空的字符串
-     * @param newlen 新长度应大于str.length()，否则对函数无影响
+     * @param newlen 新长度应大于str.length()，否则函数对传入字符串无影响
      * @return 返回结尾被空格符填充的字符串
      */
-    public String stringOfLength(@NotNull String str, int newlen) {
+    public static String stringOfLength(@NotNull String str, int newlen) {
         StringBuilder strBuilder = new StringBuilder(str);
         while (strBuilder.length() <= newlen) {
             strBuilder.append(" ");
         }
         str = strBuilder.toString();
         return str;
+    }
+
+
+    public static Student newStudent(Scanner sc) {
+        System.out.println("请依次输入  1.学号   2.姓名  3.性别(中文)  4.年龄   5.手机号1   6.手机号2   7.宿舍楼    8.宿舍号  \n");
+        String Student_ID = sc.next(); //学号
+        String Name = sc.next(); //姓名
+        String Sex = sc.next(); //性别
+        String Age = sc.next(); //年龄
+        String Phone_1 = sc.next(); //手机号
+        String Phone_2 = sc.next(); //手机号
+        String Studentbuilding = sc.next();//宿舍楼
+        String StudentRoom = sc.next(); //宿舍
+
+        sc.nextLine();
+
+        while (SQLDriver.isNotNum(Student_ID)) {
+            System.out.println("学号输入有误请重新输入(数字)");
+            Student_ID = sc.next();
+        }
+        while (!Sex.equals("男") && !Sex.equals("女")) {
+            System.out.println("性别输入有误请重新输入(中文)");
+            Sex = sc.next();
+        }
+        while (SQLDriver.isNotNum(Age)) {
+            System.out.println("年龄输入有误请重新输入(数字)");
+            Age = sc.next();
+        }
+        while (SQLDriver.isNotNum(Phone_1)) {
+            System.out.println("手机号1输入有误请重新输入(数字)");
+            Phone_1 = sc.next();
+        }
+        while (SQLDriver.isNotNum(Phone_2)) {
+            System.out.println("手机号2输入有误请重新输入(数字)");
+            Phone_2 = sc.next();
+        }
+        while (SQLDriver.isNotNum(Studentbuilding)) {
+            System.out.println("宿舍楼输入有误请重新输入(数字)");
+            Studentbuilding = sc.next();
+        }
+        while (SQLDriver.isNotNum(StudentRoom)) {
+            System.out.println("宿舍号输入有误请重新输入(数字)");
+            StudentRoom = sc.next();
+        }
+
+        sc.nextLine();
+
+        return new Student(Student_ID, Name, Sex.equals("男"), Integer.parseInt(Age), Phone_1, Phone_2, Studentbuilding, StudentRoom);
     }
 
     public String getStudent_ID() {
@@ -154,52 +246,4 @@ public class Student implements StudentList {
         Studentbuilding = studentbuilding;
     }
 
-    public static Student newStudent(Scanner sc) {
-        System.out.println("请依次输入  1.学号   2.姓名  3.性别(中文)  4.年龄   5.手机号1   6.手机号2   7.宿舍楼    8.宿舍号  \n");
-        String Student_ID = sc.next(); //学号
-        String Name = sc.next(); //姓名
-        String Sex = sc.next(); //性别
-        String Age = sc.next(); //年龄
-        String Phone_1 = sc.next(); //手机号
-        String Phone_2 = sc.next(); //手机号
-        String Studentbuilding = sc.next();//宿舍楼
-        String StudentRoom = sc.next(); //宿舍
-
-        if (sc.hasNext())//读取额外字符避免后续错误
-            sc.nextLine();
-
-        while (SQLDriver.isNotNum(Student_ID)) {
-            System.out.println("学号输入有误请重新输入(数字)");
-            Student_ID = sc.next();
-        }
-        while (!Sex.equals("男") && !Sex.equals("女")) {
-            System.out.println("性别输入有误请重新输入(中文)");
-            Sex = sc.next();
-        }
-        while (SQLDriver.isNotNum(Age)) {
-            System.out.println("年龄输入有误请重新输入(数字)");
-            Age = sc.next();
-        }
-        while (SQLDriver.isNotNum(Phone_1)) {
-            System.out.println("手机号1输入有误请重新输入(数字)");
-            Phone_1 = sc.next();
-        }
-        while (SQLDriver.isNotNum(Phone_2)) {
-            System.out.println("手机号2输入有误请重新输入(数字)");
-            Phone_2 = sc.next();
-        }
-        while (SQLDriver.isNotNum(Studentbuilding)) {
-            System.out.println("宿舍楼输入有误请重新输入(数字)");
-            Studentbuilding = sc.next();
-        }
-        while (SQLDriver.isNotNum(StudentRoom)) {
-            System.out.println("宿舍号输入有误请重新输入(数字)");
-            StudentRoom = sc.next();
-        }
-
-        if (sc.hasNext())//读取额外字符避免后续错误
-            sc.nextLine();
-
-        return new Student(Student_ID, Name, Sex.equals("男"), Integer.parseInt(Age), Phone_1, Phone_2, Studentbuilding, StudentRoom);
-    }
 }

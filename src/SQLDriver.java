@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 public class SQLDriver {
     //数据库URL
@@ -121,6 +122,22 @@ public class SQLDriver {
         return list;
     }
 
+    public static void DetStudent(String Student_ID) {
+        String param = "DELETE FROM zuoye_student.student WHERE Student_ID = " + Student_ID;
+        try {
+            PreparedStatement pst = conn.prepareStatement(param);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean isOkOfIndex(int index,String string){
+        if (index==1||index==4||index==5||index==6||index==7||index==8)
+            return isNotNum(string);
+        //TODO    实现返回
+        return false;
+    }
     /**
      * 正则检查str是否为一串数字
      *
