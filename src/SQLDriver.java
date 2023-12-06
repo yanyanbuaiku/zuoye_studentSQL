@@ -90,14 +90,7 @@ public class SQLDriver {
                 "VALUES (?,?,?,?,?,?,?,?);";
         PreparedStatement pst = conn.prepareStatement(param);
 
-        pst.setString(1, student.getStudent_ID());
-        pst.setString(2, student.getName());
-        pst.setBoolean(3, student.getSex());
-        pst.setInt(4, student.getAge());
-        pst.setString(5, student.getPhone_1());
-        pst.setString(6, student.getPhone_2());
-        pst.setString(7, student.getStudentbuilding());
-        pst.setString(8, student.getStudentRoom());
+        ReadyOfPreparedStatement(student, pst);
         return pst.executeUpdate();
     }
 
@@ -132,12 +125,52 @@ public class SQLDriver {
         }
     }
 
-    public static boolean isOkOfIndex(int index,String string){
-        if (index==1||index==4||index==5||index==6||index==7||index==8)
-            return isNotNum(string);
-        //TODO    实现返回
-        return false;
+    public static void UpdateStudent(Student student, int i) {
+        String param;
+        if (i == 3)
+            param = "UPDATE zuoye_student.student SET " + Student.getIndex(i) +
+                    "= '" + (student.getThingOfIndex(i).equals("男") ? 1 : 0) +
+                    "' WHERE Student_ID = " + student.getThingOfIndex(1);
+        else param = "UPDATE zuoye_student.student SET " + Student.getIndex(i) +
+                "= '" + student.getThingOfIndex(i) + "' WHERE Student_ID = " +
+                student.getThingOfIndex(1);
+        PreparedStatement pst;
+        try {
+            pst = conn.prepareStatement(param);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+
+    /**
+     * PreparedStatement准备期的传参工作
+     *
+     * @param student 要传入数据库的信息
+     * @param pst     当前操作的连接句柄
+     * @throws SQLException 当pst的内部set方法参数不对等抛出
+     */
+    private static void ReadyOfPreparedStatement(Student student, PreparedStatement pst) throws SQLException {
+        pst.setString(1, student.getStudent_ID());
+        pst.setString(2, student.getName());
+        pst.setBoolean(3, student.getSex());
+        pst.setInt(4, student.getAge());
+        pst.setString(5, student.getPhone_1());
+        pst.setString(6, student.getPhone_2());
+        pst.setString(7, student.getStudentbuilding());
+        pst.setString(8, student.getStudentRoom());
+    }
+
+    public static boolean isOkOfIndex(int index, String string) {
+        if (index == 1 || index == 4 || index == 5 || index == 6 || index == 7 || index == 8)
+            return !isNotNum(string);
+        if (index == 3) {
+            return string.equals("男") || string.equals("女");
+        }
+        return string != null;
+    }
+
     /**
      * 正则检查str是否为一串数字
      *

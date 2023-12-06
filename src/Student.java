@@ -43,6 +43,60 @@ public class Student {
         this.StudentRoom = studentRoom;
     }
 
+    public String getThingOfIndex(int x) {
+        switch (x) {
+            case 1:
+                return Student_ID;
+            case 2:
+                return Name;
+            case 3:
+                return Sex ? "男" : "女";
+            case 4:
+                return Integer.toString(Age);
+            case 5:
+                return Phone_1;
+            case 6:
+                return Phone_2;
+            case 7:
+                return Studentbuilding;
+            case 8:
+                return StudentRoom;
+            default:
+                return null;
+        }
+    }
+
+    public void setThingOfIndex(int x, String str) {
+        switch (x) {
+            case 1:
+                Student_ID = str;
+                break;
+            case 2:
+                Name = str;
+                break;
+            case 3:
+                Sex = str.equals("男");
+                break;
+            case 4:
+                Age = Integer.parseInt(str);
+                break;
+            case 5:
+                Phone_1 = str;
+                break;
+            case 6:
+                Phone_2 = str;
+                break;
+            case 7:
+                Studentbuilding = str;
+                break;
+            case 8:
+                StudentRoom = str;
+                break;
+            default:
+                break;
+        }
+    }
+
     public static String getIndex(int x) {
         switch (x) {
             case 1:
