@@ -1,8 +1,7 @@
 import com.sun.istack.internal.NotNull;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.math.BigInteger;
+import java.util.*;
 
 
 /**
@@ -10,7 +9,7 @@ import java.util.Scanner;
  * 提供基础Student的方法支持
  * 重写Object.toString方法
  */
-public class Student {
+public class Student implements Cloneable {
     private String Student_ID; //学号
     //bigint
     private String Name = null; //姓名
@@ -161,10 +160,57 @@ public class Student {
     }
 
 
-    public String Qsort(List<Student> students) {
+    public static List<Student> Qsort(List<Student> studentList, String mode) {
         //TODO
+        Student[] students = new Student[studentList.size()];
+        for (int i = 0; i < studentList.size(); i++) {
+            students[i] = studentList.get(i);
+        }
+        QucikSort(students, 0, students.length - 1, mode);
+        return StudentarryToList(students);
+    }
 
-        return null;
+    private static void QucikSort(Student[] students, int low, int high, String mode) {
+        if (low < high) {
+            int key = partitionStudents(students, low, high, mode);
+            QucikSort(students, low, key - 1, mode);
+            QucikSort(students, key + 1, high, mode);
+        }
+    }
+
+    private static int partitionStudents(Student[] students, int low, int high, String mode) {
+        Student temp = students[low].clone();
+        if (mode.equals("Student_ID")) {
+            while (low < high) {
+                while (low < high && new BigInteger(students[low].getStudent_ID()).
+                        compareTo(new BigInteger(temp.getStudent_ID())) >= 0) high--;
+                students[low] = students[high];
+                while (low < high && new BigInteger(students[low].getStudent_ID()).
+                        compareTo(new BigInteger(temp.getStudent_ID())) <= 0) low++;
+                students[high] = students[low];
+            }
+        } else if (mode.equals("Name")) {
+            while (low < high) {
+                while (low < high && students[high].getName().length() >= temp.getName().length()) high--;
+                students[low] = students[high];
+                while (low < high && students[low].getName().length() <= temp.getName().length()) low++;
+                students[high] = students[low];
+            }
+        }
+        students[low] = temp;
+        return low;
+    }
+
+    public Student clone() {
+        try {
+            return (Student) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static List<Student> StudentarryToList(Student[] students) {
+        return new LinkedList<>(Arrays.asList(students));
     }
 
     public String toString() {
@@ -179,7 +225,7 @@ public class Student {
      * @param newlen 新长度应大于str.length()，否则函数对传入字符串无影响
      * @return 返回结尾被空格符填充的字符串
      */
-    public static String stringOfLength(@NotNull String str, int newlen) {
+    private static String stringOfLength(@NotNull String str, int newlen) {
         StringBuilder strBuilder = new StringBuilder(str);
         while (strBuilder.length() <= newlen) {
             strBuilder.append(" ");
@@ -235,6 +281,7 @@ public class Student {
 
         return new Student(Student_ID, Name, Sex.equals("男"), Integer.parseInt(Age), Phone_1, Phone_2, Studentbuilding, StudentRoom);
     }
+
 
     public String getStudent_ID() {
         return Student_ID;

@@ -1,7 +1,6 @@
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 public class SQLDriver {
     //数据库URL
@@ -80,9 +79,8 @@ public class SQLDriver {
         }
     }
 
-    public static int setStstement(Student student) throws SQLException {
-        Student stu = new Student();
-        Statement st = conn.createStatement();
+    public static void setStstement(Student student) throws SQLException {
+
         String param = "INSERT INTO " +
                 "zuoye_student.student " +
                 "(Student_ID, Name, Sex, Age,"
@@ -91,7 +89,7 @@ public class SQLDriver {
         PreparedStatement pst = conn.prepareStatement(param);
 
         ReadyOfPreparedStatement(student, pst);
-        return pst.executeUpdate();
+        pst.executeUpdate();
     }
 
     private static List<Student> getStudents(ResultSet rs) throws SQLException {
@@ -162,13 +160,13 @@ public class SQLDriver {
         pst.setString(8, student.getStudentRoom());
     }
 
-    public static boolean isOkOfIndex(int index, String string) {
+    public static boolean isNotofIndex(int index, String string) {
         if (index == 1 || index == 4 || index == 5 || index == 6 || index == 7 || index == 8)
-            return !isNotNum(string);
+            return isNotNum(string);
         if (index == 3) {
-            return string.equals("男") || string.equals("女");
+            return !string.equals("男") && !string.equals("女");
         }
-        return string != null;
+        return string == null;
     }
 
     /**
